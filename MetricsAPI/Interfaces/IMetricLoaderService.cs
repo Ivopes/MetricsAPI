@@ -2,6 +2,6 @@
 {
     public interface IMetricLoaderService
     {
-        Task<IResult> LoadMetric(string metricName);
+        Task<IResult> LoadMetric(string metricName, bool isTotal);
     }
 }

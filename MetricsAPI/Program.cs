@@ -21,10 +21,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/metrics/{metricName}", (string metricName, IMetricLoaderService loader) =>
+app.MapGet("/metrics/inc/{metricName}", (string metricName, IMetricLoaderService loader) =>
 {
-    return loader.LoadMetric(metricName);
+    return loader.LoadMetric(metricName, false);
+});
+app.MapGet("/metrics/total/{metricName}", (string metricName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetric(metricName, true);
 })
+
 .WithName("GetSpecifiedMetric");
 
 app.Run();

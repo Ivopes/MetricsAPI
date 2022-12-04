@@ -5,20 +5,29 @@ namespace MetricsAPI.Services
 {
     public class MetricLoaderService : IMetricLoaderService
     {
-        private readonly string _metricsFolder = @"C:\Users\hapes\Downloads\Metriky";
+        private readonly string _metricsIncFolder = @".\Metriky\Increment";
+        private readonly string _metricsTotalFolder = @".\Metriky\Total";
 
-        public async Task<IResult> LoadMetric(string metricName)
+        public async Task<IResult> LoadMetric(string metricName, bool isTotal)
         {
             List<MetricPortion> metrics = new();
 
-            bool skipFirst = true;
-            foreach (var line in File.ReadLines(Path.Combine(_metricsFolder, metricName + ".csv")))
+            string filePath = string.Empty;
+            if (isTotal)
+                filePath = Path.Combine(_metricsTotalFolder, metricName + ".csv");
+            else
+                filePath = Path.Combine(_metricsIncFolder, metricName + ".csv");
+
+            bool skipFirst = false;
+
+            foreach (var line in await File.ReadAllLinesAsync(filePath))
             {
-                if (skipFirst)
-                {
-                    skipFirst = false;
-                    continue;
+                if (!skipFirst)
+                { 
+                    skipFirst= true;
+                    continue; 
                 }
+
                 var metric = new MetricPortion();
 
                 string[] fields = line.Split(';');
@@ -28,6 +37,7 @@ namespace MetricsAPI.Services
                     metric.Date = DateTime.Parse(fields[0]);
                     metric.AdditionWithSign = int.Parse(fields[1]);
                     metric.AdditionWithoutSign = int.Parse(fields[2]);
+                    metric.Release = fields[3];
                 }
                 catch (Exception ex)
                 {
