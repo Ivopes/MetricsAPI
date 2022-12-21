@@ -21,15 +21,36 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/metrics/inc/{metricName}", (string metricName, IMetricLoaderService loader) =>
+// Download specific increment metric for specific project
+// Obsolete
+// TODO: Replace with date specifier
+app.MapGet("/metrics/{projectName}/inc/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
 {
-    return loader.LoadMetric(metricName, false);
+    return loader.LoadMetric(projectName, metricName, false);
 });
-app.MapGet("/metrics/total/{metricName}", (string metricName, IMetricLoaderService loader) =>
+// Download specific total metric for specific project
+app.MapGet("/metrics/{projectName}/total/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
 {
-    return loader.LoadMetric(metricName, true);
-})
-
-.WithName("GetSpecifiedMetric");
-
+    return loader.LoadMetric(projectName, metricName, true);
+});
+// Download all increment metric for specific project
+app.MapGet("/metrics/{projectName}/inc", (string projectName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricAll(projectName, false);
+});
+// Download all total metric for specific project
+app.MapGet("/metrics/{projectName}/total", (string projectName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricAll(projectName, true);
+});
+// Download all latest increment metric for specific project
+app.MapGet("/metrics/{projectName}/latest", (string projectName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricLatestAll(projectName);
+});
+// Download specific latest increment metric for specific project
+app.MapGet("/metrics/{projectName}/latest/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricLatest(projectName, metricName);
+});
 app.Run();

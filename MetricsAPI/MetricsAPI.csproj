@@ -17,9 +17,25 @@
     <None Update="Metriky\Increment\ObecnyPomerRelease2.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Metriky\Projekt1\Increment\ObecnyPomerRelease1.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\Projekt1\Increment\ObecnyPomerRelease2.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\projekt1\Total\SplneneReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\projekt1\Total\SchvaleneReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Metriky\Total\ObecnyPomerRelease.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Metriky\Projekt2\" />
   </ItemGroup>
 
 </Project>
