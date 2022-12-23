@@ -36,18 +36,28 @@ namespace MetricsAPI.Services
         public async Task<IResult> LoadMetricAll(string projectName, bool isTotal)
         {
             List<MetricPortion> metrics = new List<MetricPortion>();
-
-            string path;
-            if (isTotal)
-                path = string.Format(MetricsTotalFolder, projectName, string.Empty);
-            else
-                path = string.Format(MetricsIncFolder, projectName, string.Empty);
-
-            foreach (string file in Directory.EnumerateFiles(path, $"*{FileExt}"))
+            try
             {
-                var fileName = file.Substring(0, file.Length - FileExt.Length).Substring(file.LastIndexOf('\\')+1);
-                var metric = await ReadMetricFromFile(projectName, fileName, isTotal);
-                metrics.Add(metric);
+                string path;
+                if (isTotal)
+                    path = string.Format(MetricsTotalFolder, projectName, string.Empty);
+                else
+                    path = string.Format(MetricsIncFolder, projectName, string.Empty);
+
+                foreach (string file in Directory.EnumerateFiles(path, $"*{FileExt}"))
+                {
+                    var fileName = file.Substring(0, file.Length - FileExt.Length).Substring(file.LastIndexOf('\\')+1);
+                    var metric = await ReadMetricFromFile(projectName, fileName, isTotal);
+                    metrics.Add(metric);
+                }
+            }
+              catch (FileNotFoundException)
+            {
+                return Results.NotFound();
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return Results.NotFound();
             }
 
             return Results.Ok(metrics);
@@ -62,6 +72,12 @@ namespace MetricsAPI.Services
             try
             {
                 files = Directory.GetFiles(path, $"*{FileExt}").Where(f => string.Equals(TrimNumber(Path.GetFileNameWithoutExtension(f)), metricName, StringComparison.InvariantCultureIgnoreCase)).Select(f => Path.GetFileName(f)).OrderByDescending(f => f);
+            
+                if (files.Count() == 0) return Results.NotFound();
+
+                var latestFile = files.First();
+
+                metric = await ReadMetricFromFile(projectName, latestFile, false, string.Empty); // already has extention in name
             }
             catch (FileNotFoundException)
             {
@@ -71,10 +87,6 @@ namespace MetricsAPI.Services
             {
                 return Results.NotFound();
             }
-
-            var latestFile = files.First();
-
-            metric = await ReadMetricFromFile(projectName, latestFile, false, string.Empty); // already has extention in name
 
             return Results.Ok(metric);
         }
