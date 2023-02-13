@@ -1,4 +1,5 @@
-﻿Datum;Pocet pribytku s priznakem;Pocet pribytku celkem;Release
+﻿Datum;Pocet schvalenych pozadavku;Pocet pozadavku celkem;Release;Toto jsou data o schvalenych pozadavcich
+System.DateTime;System.Int32;System.Int32;System.String
 18.11.2022;150;0;1
 19.11.2022;40;5;1
 19.11.2022;5;0;2

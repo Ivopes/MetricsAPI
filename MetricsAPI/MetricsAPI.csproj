@@ -11,10 +11,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Metriky\Increment\ObecnyPomerRelease1.csv">
+    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Total\SchvaleneReq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metriky\Increment\ObecnyPomerRelease2.csv">
+    <None Update="Metriky\projektTest3\Total\SchvaleneReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\projektTest3\Total\SplneneReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\projektTest2\Total\SchvaleneReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\projektTest2\Total\SplneneReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\projektTest\Total\SchvaleneReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\projektTest\Total\SplneneReq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Metriky\Projekt1\Increment\ObecnyPomerRelease1.csv">
@@ -27,9 +42,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Metriky\projekt1\Total\SchvaleneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\Total\ObecnyPomerRelease.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

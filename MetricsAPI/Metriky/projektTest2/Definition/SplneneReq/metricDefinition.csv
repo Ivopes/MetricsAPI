@@ -1,0 +1,15 @@
+﻿Column name;Column type
+Date;Datetime
+FinishedRequirements;Int64
+TotalRequirements;Int64
+Release;String
+;
+Measures;Measure definition
+SumTotal;CALCULATE (SUM(table1[TotalRequirements]), FILTER( ALL( table1 ), table1[Date] <= MAX (table1[Date] )))
+SumTotalByRelease;CALCULATE (SUM (table1[TotalRequirements] ), FILTER(ALL ( table1 ), table1[Datum] <= MAX ( table1[Datum] )), VALUES(table1[Release]))
+SumSpecific;CALCULATE ( SUM(table1[FinishedRequirements] ), FILTER ( ALL ( table1 ), table1[Datum] <= MAX ( table1[Datum] )))
+SumSpecificByRelease;CALCULATE ( SUM ( table1[FinishedRequirements] ), FILTER ( ALL ( table1 ), table1[Datum] <= MAX ( table1[Datum])), VALUES(table1[Release]))
+Ratio;table1[SumSpecific] / table1[SumTotal]
+RatioByRelease;table1[SumSpecificByRelease] / table1[SumTotalByRelease]
+LastRatio;CALCULATE([Ratio], table1[Datum] == MAX(table1[Datum]))
+LastRatioByRelease;CALCULATE([RatioByRelease], table1[Datum] == MAX(table1[Datum]))

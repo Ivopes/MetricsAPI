@@ -53,4 +53,20 @@ app.MapGet("/metrics/{projectName}/latest/{metricName}", (string projectName, st
 {
     return loader.LoadMetricLatest(projectName, metricName);
 });
+app.MapGet("/metrics/{projectName}/definition/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricDefinition(projectName, metricName);
+});
+app.MapGet("/new/metrics/definition/{metricName}", (string metricName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricDefinitionNew(metricName);
+});
+app.MapGet("/new/metrics/total/{metricName}", (string metricName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricDataNew(metricName, false);
+});
+app.MapGet("/new/metrics/inc/{metricName}", (string metricName, IMetricLoaderService loader) =>
+{
+    return loader.LoadMetricDataNew(metricName, true);
+});
 app.Run();
