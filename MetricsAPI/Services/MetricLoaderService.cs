@@ -247,6 +247,10 @@ namespace MetricsAPI.Services
                     {
                         obj.Add(definition.ColumnNames[i], int.Parse(line[i]));
                     }
+                    else if (definition.ColumnTypes[i] == "Datetime")
+                    {
+                        obj.Add(definition.ColumnNames[i], DateTime.Parse(line[i]));
+                    }
                     else
                     {
                         obj.Add(definition.ColumnNames[i], line[i]);
@@ -307,7 +311,7 @@ namespace MetricsAPI.Services
 
             using StreamReader sr = new StreamReader(s);
 
-            definition.Name = await sr.ReadLineAsync();
+            definition.Name = await sr.ReadLineAsync()!;
 
             _ = await sr.ReadLineAsync();
 
