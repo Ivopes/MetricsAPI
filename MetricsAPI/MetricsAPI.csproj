@@ -11,6 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Definition\metricDefinition.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Increment\SchvaleneReq_00_04_03_2023.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Total\SchvaleneReq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

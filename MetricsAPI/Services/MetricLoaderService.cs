@@ -1,6 +1,7 @@
 ﻿using MetricsAPI.Interfaces;
 using MetricsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
 using System.Dynamic;
 using System.IO;
@@ -18,7 +19,11 @@ namespace MetricsAPI.Services
         private const string MetricsTotalFolderNew = @".\Metriky\Nove\{0}\Total\{1}";
 
         private const string FileExt = ".csv";
-
+        private readonly MetricsUpdateOptions _updateOptions;
+        public MetricLoaderService(IOptions<MetricsUpdateOptions> opt)
+        {
+            _updateOptions = opt.Value;
+        }
         public async Task<IResult> LoadMetric(string projectName, string metricName, bool isTotal)
         {
             try
@@ -231,7 +236,7 @@ namespace MetricsAPI.Services
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
-
+            
             using Stream s = File.OpenRead(filePath);
 
             using StreamReader sr = new StreamReader(s);
@@ -305,7 +310,8 @@ namespace MetricsAPI.Services
         {
             MetricDefinition definition = new();
 
-            string filePath = string.Format(MetricsDefinitionFolderNew, metricName);
+            var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsDefinitionFolderNew);
+            string filePath = string.Format(exePath, metricName);
 
             using Stream s = File.OpenRead(filePath);
 
@@ -354,15 +360,10 @@ namespace MetricsAPI.Services
 
             if (loadIncrement)
             {
-                DateTime lastMetricAddDay = DateTime.Today;
-                while (lastMetricAddDay.DayOfWeek != DayOfWeek.Saturday)
-                {
-                    lastMetricAddDay = lastMetricAddDay.AddDays(-1);
-                }
+                string date = GetUpdateSuffix();
 
-                string date = lastMetricAddDay.ToString("dd_MM_yyyy");
-
-                filePath = string.Format(MetricsIncFolderNew, metricName, fileName + "_" + date + fileExtention);
+                var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsIncFolderNew);
+                filePath = string.Format(exePath, metricName, fileName + "_" + date + fileExtention);
             }
             else
             {
@@ -370,6 +371,25 @@ namespace MetricsAPI.Services
             }
 
             fileDefinition = string.Format(MetricsDefinitionFolderNew, metricName);
+        }
+        private string GetUpdateSuffix()
+        {
+            DateTime lastMetricDate = DateTime.UtcNow;
+
+            switch (_updateOptions.UpdateFrequency)
+            {
+                case UpdateFrequency.Hour:
+                    lastMetricDate = lastMetricDate.AddHours(-1);
+                    return lastMetricDate.ToString("HH_dd_MM_yyyy");
+                case UpdateFrequency.Day:
+                    lastMetricDate = lastMetricDate.AddDays(-1);
+                    return lastMetricDate.ToString("00_dd_MM_yyyy");
+                case UpdateFrequency.Week:
+                    while (lastMetricDate.DayOfWeek != _updateOptions.DayOfWeek) lastMetricDate = lastMetricDate.AddDays(-1);
+                    return lastMetricDate.ToString("00_dd_MM_yyyy");
+                default:
+                    return string.Empty;
+            }
         }
     }
 }
