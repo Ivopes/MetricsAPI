@@ -10,13 +10,9 @@ namespace MetricsAPI.Services
 {
     public class MetricLoaderService : IMetricLoaderService
     {
-        private const string MetricsIncFolder = @".\Metriky\{0}\Increment\{1}";
-        private const string MetricsTotalFolder = @".\Metriky\{0}\Total\{1}";
-        private const string MetricsDefinitionFolder = @".\Metriky\{0}\Definition\{1}";
-
-        private const string MetricsDefinitionFolderNew = @".\Metriky\Nove\{0}\Definition\metricDefinition.csv";
-        private const string MetricsIncFolderNew = @".\Metriky\Nove\{0}\Increment\{1}";
-        private const string MetricsTotalFolderNew = @".\Metriky\Nove\{0}\Total\{1}";
+        private const string MetricsDefinitionFolder = @".\Metriky\Nove\{0}\Definition\metricDefinition.csv";
+        private const string MetricsIncFolder = @".\Metriky\Nove\{0}\Increment\{1}";
+        private const string MetricsTotalFolder = @".\Metriky\Nove\{0}\Total\{1}";
 
         private const string FileExt = ".csv";
         private readonly MetricsUpdateOptions _updateOptions;
@@ -24,68 +20,13 @@ namespace MetricsAPI.Services
         {
             _updateOptions = opt.Value;
         }
-        public async Task<IResult> LoadMetric(string projectName, string metricName, bool isTotal)
-        {
-            try
-            {
-                MetricPortion metrics = await ReadMetricFromFile(projectName, metricName, isTotal);
-
-                return Results.Ok(metrics);
-            } 
-            catch (FileNotFoundException) 
-            {
-                return Results.NotFound();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return Results.NotFound();
-            }
-            catch (Exception)
-            {
-                return Results.Problem(statusCode: 500);
-            }
-        }
-
-        public async Task<IResult> LoadMetricAll(string projectName, bool isTotal)
-        {
-            List<MetricPortion> metrics = new List<MetricPortion>();
-            try
-            {
-                string path;
-                if (isTotal)
-                    path = string.Format(MetricsTotalFolder, projectName, string.Empty);
-                else
-                    path = string.Format(MetricsIncFolder, projectName, string.Empty);
-
-                foreach (string file in Directory.EnumerateFiles(path, $"*{FileExt}"))
-                {
-                    var fileName = file.Substring(0, file.Length - FileExt.Length).Substring(file.LastIndexOf('\\')+1);
-                    var metric = await ReadMetricFromFile(projectName, fileName, isTotal);
-                    metrics.Add(metric);
-                }
-            }
-              catch (FileNotFoundException)
-            {
-                return Results.NotFound();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return Results.NotFound();
-            }
-
-            return Results.Ok(metrics);
-        }
-
-        public async Task<IResult> LoadMetricDefinition(string projectName, string metricName)
+        public async Task<IResult> LoadMetricDefinition(string metricName)
         {
             var definition = new MetricDefinition();
 
-            string filePath = string.Format(MetricsDefinitionFolder, projectName, metricName);
             try
             {
-                if (Directory.GetFiles(filePath, $"*{FileExt}").Length != 1) return Results.Problem($"Weird structure inside folder: {filePath}");
-
-                definition = await ReadDefinitionFromFile(projectName, metricName, FileExt);
+                definition = await ReadDefinitionFromFile(metricName);
 
                 return Results.Ok(definition);
             }
@@ -98,141 +39,17 @@ namespace MetricsAPI.Services
                 return Results.NotFound();
             }
         }
-        public async Task<IResult> LoadMetricDefinitionNew(string metricName)
-        {
-            var definition = new MetricDefinition();
-
-            try
-            {
-                definition = await ReadDefinitionFromFileNew(metricName);
-
-                return Results.Ok(definition);
-            }
-            catch (FileNotFoundException)
-            {
-                return Results.NotFound();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return Results.NotFound();
-            }
-        }
-        public async Task<IResult> LoadMetricLatest(string projectName, string metricName)
-        {
-            var metric = new MetricPortion();
-
-            string path = string.Format(MetricsIncFolder, projectName, string.Empty);
-            IOrderedEnumerable<string> files;
-            try
-            {
-                files = Directory.GetFiles(path, $"*{FileExt}").Where(f => string.Equals(TrimNumber(Path.GetFileNameWithoutExtension(f)), metricName, StringComparison.InvariantCultureIgnoreCase)).Select(f => Path.GetFileName(f)).OrderByDescending(f => f);
-            
-                if (files.Count() == 0) return Results.NotFound();
-
-                var latestFile = files.First();
-
-                metric = await ReadMetricFromFile(projectName, latestFile, false, string.Empty); // already has extention in name
-            }
-            catch (FileNotFoundException)
-            {
-                return Results.NotFound();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return Results.NotFound();
-            }
-
-            return Results.Ok(metric);
-        }
-
-        public async Task<IResult> LoadMetricLatestAll(string projectName)
-        {
-            var metrics = new List<MetricPortion>();
-
-            string path = string.Format(MetricsIncFolder, projectName, string.Empty);
-            IOrderedEnumerable<string> files;
-            try
-            {
-                files = Directory.GetFiles(path, $"*{FileExt}").Select(f => Path.GetFileName(f)).OrderByDescending(f => f);
-            }
-            catch (FileNotFoundException)
-            {
-                return Results.NotFound();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return Results.NotFound();
-            }
-
-            var distinctFilesGroup = files.GroupBy(f => TrimNumber(f));
-
-            foreach (var fileGroup in distinctFilesGroup)
-            {
-                var latestFile = fileGroup.OrderByDescending(f => f).First();
-
-                metrics.Add(await ReadMetricFromFile(projectName, latestFile, false, string.Empty)); // already has extention in name
-            }
-       
-            return Results.Ok(metrics);
-        }
-        public async Task<MetricData<ExpandoObject>?> LoadMetricDataNew(string metricName, bool loadIncrement)
+        public async Task<MetricData<ExpandoObject>?> LoadMetricData(string metricName, bool loadIncrement)
         {
             CreateFilePath(metricName, loadIncrement, FileExt, out var filePath, out var fileDefinition);
 
-            var definition = await ReadDefinitionFromFileNew(metricName);
+            var definition = await ReadDefinitionFromFile(metricName);
 
-            MetricData<ExpandoObject> metricData = await ReadMetricFromFileNew(filePath, definition);
+            MetricData<ExpandoObject> metricData = await ReadMetricFromFile(filePath, definition);
 
             return metricData;
         }
-        private Task<MetricPortion> ReadMetricFromFile(string projectName, string metricName, bool isTotal)
-        {
-            return ReadMetricFromFile(projectName, metricName, isTotal, FileExt);
-        }
-        private async Task<MetricPortion> ReadMetricFromFile(string projectName, string metricName, bool isTotal, string fileExtention)
-        {
-            MetricPortion metrics = new();
-
-            metrics.Name = metricName;
-
-            string filePath;
-            if (isTotal)
-                filePath = string.Format(MetricsTotalFolder, projectName, metricName + fileExtention);
-            else
-                filePath = string.Format(MetricsIncFolder, projectName, metricName + fileExtention);
-
-            using Stream s = File.OpenRead(filePath);
-
-            using StreamReader sr = new StreamReader(s);
-
-            string[] line = (await sr.ReadLineAsync())!.Split(';');
-
-            metrics.AdditionWithSignName = line[1];
-            metrics.AdditionWithoutSignName = line[2];
-
-            line = (await sr.ReadLineAsync())!.Split(';');
-
-            metrics.AdditionWithSignType = Type.GetType(line[1])!.FullName!;
-
-            metrics.AdditionWithoutSignType = Type.GetType(line[2])!.FullName!;
-
-            while (!sr.EndOfStream)
-            {
-                var row = new MetricPortionRow();
-
-                line = (await sr.ReadLineAsync())!.Split(';');
-
-                row.Date = DateTime.Parse(line[0]);
-                row.AdditionWithSign = float.Parse(line[1]);
-                row.AdditionWithoutSign = float.Parse(line[2]);
-                row.Release = line[3];
-
-                metrics.Rows.Add(row);
-            }
-
-            return metrics;
-        }
-        private async Task<MetricData<ExpandoObject>> ReadMetricFromFileNew(string filePath, MetricDefinition definition)
+        private async Task<MetricData<ExpandoObject>> ReadMetricFromFile(string filePath, MetricDefinition definition)
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
@@ -267,50 +84,11 @@ namespace MetricsAPI.Services
 
             return metrics;
         }
-        private async Task<MetricDefinition> ReadDefinitionFromFile(string projectName, string metricName, string fileExtention)
+        private async Task<MetricDefinition> ReadDefinitionFromFile(string metricName)
         {
             MetricDefinition definition = new();
 
-            definition.Name = metricName;
-
-            string filePath = string.Format(MetricsDefinitionFolder, projectName, metricName + fileExtention);
-
-            using Stream s = File.OpenRead(filePath);
-
-            using StreamReader sr = new StreamReader(s);
-
-            _ = await sr.ReadLineAsync();
-
-            definition.ColumnNames = new List<string>();
-            definition.ColumnTypes = new List<string>();
-            string? line;
-            while ((line = await sr.ReadLineAsync() ) != ";" && !string.IsNullOrEmpty(line))
-            {
-                string[] columns = line.Split(';');
-
-                definition.ColumnNames.Add(columns[0]);
-                definition.ColumnTypes.Add(columns[1]);
-            }
-
-            _ = await sr.ReadLineAsync();
-
-            definition.Measures = new List<string>();
-            definition.MeasureDefinitions = new List<string>();
-            while ((line = await sr.ReadLineAsync()) != ";" && !string.IsNullOrEmpty(line))
-            {
-                string[] columns = line.Split(';');
-
-                definition.Measures.Add(columns[0]);
-                definition.MeasureDefinitions.Add(columns[1]);
-            }
-
-            return definition;
-        }
-        private async Task<MetricDefinition> ReadDefinitionFromFileNew(string metricName)
-        {
-            MetricDefinition definition = new();
-
-            var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsDefinitionFolderNew);
+            var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsDefinitionFolder);
             string filePath = string.Format(exePath, metricName);
 
             using Stream s = File.OpenRead(filePath);
@@ -346,11 +124,6 @@ namespace MetricsAPI.Services
 
             return definition;
         }
-        private string TrimNumber(string file)
-        {
-            return file.Substring(0, file.LastIndexOf("_"));
-        }
-
         private void CreateFilePath(string metricName, bool loadIncrement, string fileExtention, out string filePath, out string fileDefinition)
         {
             var nameStartIndex = metricName.IndexOf("_");
@@ -362,15 +135,15 @@ namespace MetricsAPI.Services
             {
                 string date = GetUpdateSuffix();
 
-                var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsIncFolderNew);
+                var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsIncFolder);
                 filePath = string.Format(exePath, metricName, fileName + "_" + date + fileExtention);
             }
             else
             {
-                filePath = string.Format(MetricsTotalFolderNew, metricName, fileName + fileExtention);
+                filePath = string.Format(MetricsTotalFolder, metricName, fileName + fileExtention);
             }
 
-            fileDefinition = string.Format(MetricsDefinitionFolderNew, metricName);
+            fileDefinition = string.Format(MetricsDefinitionFolder, metricName);
         }
         private string GetUpdateSuffix()
         {

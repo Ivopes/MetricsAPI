@@ -25,52 +25,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Download specific increment metric for specific project
-// Obsolete
-// TODO: Replace with date specifier
-app.MapGet("/metrics/{projectName}/inc/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
+app.MapGet("/metrics/definition/{metricName}", (string metricName, IMetricLoaderService loader) =>
 {
-    return loader.LoadMetric(projectName, metricName, false);
+    return loader.LoadMetricDefinition(metricName);
 });
-// Download specific total metric for specific project
-app.MapGet("/metrics/{projectName}/total/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
+app.MapGet("/metrics/total/{metricName}", (string metricName, IMetricLoaderService loader) =>
 {
-    return loader.LoadMetric(projectName, metricName, true);
+    return loader.LoadMetricData(metricName, false);
 });
-// Download all increment metric for specific project
-app.MapGet("/metrics/{projectName}/inc", (string projectName, IMetricLoaderService loader) =>
+app.MapGet("/metrics/inc/{metricName}", (string metricName, IMetricLoaderService loader) =>
 {
-    return loader.LoadMetricAll(projectName, false);
-});
-// Download all total metric for specific project
-app.MapGet("/metrics/{projectName}/total", (string projectName, IMetricLoaderService loader) =>
-{
-    return loader.LoadMetricAll(projectName, true);
-});
-// Download all latest increment metric for specific project
-app.MapGet("/metrics/{projectName}/latest", (string projectName, IMetricLoaderService loader) =>
-{
-    return loader.LoadMetricLatestAll(projectName);
-});
-// Download specific latest increment metric for specific project
-app.MapGet("/metrics/{projectName}/latest/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
-{
-    return loader.LoadMetricLatest(projectName, metricName);
-});
-app.MapGet("/metrics/{projectName}/definition/{metricName}", (string projectName, string metricName, IMetricLoaderService loader) =>
-{
-    return loader.LoadMetricDefinition(projectName, metricName);
-});
-app.MapGet("/new/metrics/definition/{metricName}", (string metricName, IMetricLoaderService loader) =>
-{
-    return loader.LoadMetricDefinitionNew(metricName);
-});
-app.MapGet("/new/metrics/total/{metricName}", (string metricName, IMetricLoaderService loader) =>
-{
-    return loader.LoadMetricDataNew(metricName, false);
-});
-app.MapGet("/new/metrics/inc/{metricName}", (string metricName, IMetricLoaderService loader) =>
-{
-    return loader.LoadMetricDataNew(metricName, true);
+    return loader.LoadMetricData(metricName, true);
 });
 app.Run();
