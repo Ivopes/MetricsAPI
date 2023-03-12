@@ -5,16 +5,16 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
 using System.Dynamic;
 using System.IO;
+using System.Text.Json;
 
 namespace MetricsAPI.Services
 {
     public class MetricLoaderService : IMetricLoaderService
     {
-        private const string MetricsDefinitionFolder = @".\Metriky\Nove\{0}\Definition\metricDefinition.csv";
+        private const string MetricsDefinitionFolder = @".\Metriky\Nove\{0}\Definition\metricDefinition";
         private const string MetricsIncFolder = @".\Metriky\Nove\{0}\Increment\{1}";
         private const string MetricsTotalFolder = @".\Metriky\Nove\{0}\Total\{1}";
 
-        private const string FileExt = ".csv";
         private readonly MetricsUpdateOptions _updateOptions;
         public MetricLoaderService(IOptions<MetricsUpdateOptions> opt)
         {
@@ -41,15 +41,21 @@ namespace MetricsAPI.Services
         }
         public async Task<MetricData<ExpandoObject>?> LoadMetricData(string metricName, bool loadIncrement)
         {
-            CreateFilePath(metricName, loadIncrement, FileExt, out var filePath, out var fileDefinition);
-
             var definition = await ReadDefinitionFromFile(metricName);
 
-            MetricData<ExpandoObject> metricData = await ReadMetricFromFile(filePath, definition);
+            CreateFilePath(metricName, loadIncrement, GetExt(FileExt.CSV), out var filePath, out _);
 
-            return metricData;
+            if (File.Exists(filePath))
+            {
+                return await ReadMetricFromFileCsv(filePath, definition);
+            }
+            else
+            {
+                CreateFilePath(metricName, loadIncrement, GetExt(FileExt.JSON), out filePath, out _);
+                return await ReadMetricFromFileJson(filePath, definition);
+            }
         }
-        private async Task<MetricData<ExpandoObject>> ReadMetricFromFile(string filePath, MetricDefinition definition)
+        private async Task<MetricData<ExpandoObject>> ReadMetricFromFileCsv(string filePath, MetricDefinition definition)
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
@@ -84,12 +90,38 @@ namespace MetricsAPI.Services
 
             return metrics;
         }
+        private async Task<MetricData<ExpandoObject>> ReadMetricFromFileJson(string filePath, MetricDefinition definition)
+        {
+            MetricData<ExpandoObject> metrics = new();
+            metrics.Rows = new List<ExpandoObject>();
+
+            using Stream s = File.OpenRead(filePath);
+
+            metrics.Rows = (await JsonSerializer.DeserializeAsync<ExpandoObject[]>(s))!;
+
+            return metrics;
+        }
         private async Task<MetricDefinition> ReadDefinitionFromFile(string metricName)
         {
-            MetricDefinition definition = new();
 
             var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsDefinitionFolder);
             string filePath = string.Format(exePath, metricName);
+
+
+            if (File.Exists(filePath + GetExt(FileExt.CSV))) 
+            {
+                filePath += GetExt(FileExt.CSV);
+                return await ReadDefinitionFromCsv(filePath);
+            }
+            else
+            {
+                filePath += GetExt(FileExt.JSON);
+                return await ReadDefinitionFromJson(filePath);
+            }
+        }
+        private async Task<MetricDefinition> ReadDefinitionFromCsv(string filePath)
+        {
+            MetricDefinition definition = new();
 
             using Stream s = File.OpenRead(filePath);
 
@@ -121,6 +153,14 @@ namespace MetricsAPI.Services
                 definition.Measures.Add(columns[0]);
                 definition.MeasureDefinitions.Add(columns[1]);
             }
+
+            return definition;
+        }
+        private async Task<MetricDefinition> ReadDefinitionFromJson(string filePath)
+        {
+            using Stream s = File.OpenRead(filePath);
+
+            MetricDefinition definition = (await JsonSerializer.DeserializeAsync<MetricDefinition>(s))!;
 
             return definition;
         }
@@ -164,5 +204,19 @@ namespace MetricsAPI.Services
                     return string.Empty;
             }
         }
+        private string GetExt(FileExt ext)
+        {
+            return ext switch
+            {
+                FileExt.CSV => ".csv",
+                FileExt.JSON => ".json",
+                _ => string.Empty
+            };
+        }
+    }
+    public enum FileExt
+    {
+        CSV = 0,
+        JSON = 1
     }
 }

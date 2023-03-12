@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Metriky\Nove\Projekt1_SchvaleneReqJson\Definition\metricDefinition.json" />
+    <Content Remove="Metriky\Nove\Projekt1_SchvaleneReqJson\Increment\SchvaleneReqjson_00_11_03_2023.json" />
+    <Content Remove="Metriky\Nove\Projekt1_SchvaleneReqJson\Total\SchvaleneReqjson.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -14,7 +20,7 @@
     <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Definition\metricDefinition.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Increment\SchvaleneReq_00_04_03_2023.csv">
+    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Increment\SchvaleneReq_00_11_03_2023.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Total\SchvaleneReq.csv">
@@ -54,6 +60,18 @@
 
   <ItemGroup>
     <Folder Include="Metriky\Projekt2\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Metriky\Nove\Projekt1_SchvaleneReqJson\Definition\metricDefinition.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Metriky\Nove\Projekt1_SchvaleneReqJson\Increment\SchvaleneReqjson_00_11_03_2023.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Metriky\Nove\Projekt1_SchvaleneReqJson\Total\SchvaleneReqjson.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,68 @@
+﻿[
+    {
+      "Date": "2022-11-25T00:00:00",
+      "ApprovedRequirements": 150,
+      "TotalRequirements": 0,
+      "Release": "3"
+    },
+    {
+      "Date": "2022-11-26T00:00:00",
+      "ApprovedRequirements": 40,
+      "TotalRequirements": 5,
+      "Release": "2"
+    },
+    {
+      "Date": "2022-11-27T00:00:00",
+      "ApprovedRequirements": 5,
+      "TotalRequirements": 0,
+      "Release": "3"
+    },
+    {
+      "Date": "2022-11-28T00:00:00",
+      "ApprovedRequirements": 2,
+      "TotalRequirements": 20,
+      "Release": "2"
+    },
+    {
+      "Date": "2022-11-29T00:00:00",
+      "ApprovedRequirements": 15,
+      "TotalRequirements": 20,
+      "Release": "3"
+    },
+    {
+      "Date": "2022-11-30T00:00:00",
+      "ApprovedRequirements": 0,
+      "TotalRequirements": 20,
+      "Release": "2"
+    },
+    {
+      "Date": "2022-11-30T00:00:00",
+      "ApprovedRequirements": 0,
+      "TotalRequirements": 20,
+      "Release": "3"
+    },
+    {
+      "Date": "2022-11-30T00:00:00",
+      "ApprovedRequirements": 10,
+      "TotalRequirements": 12,
+      "Release": "2"
+    },
+    {
+      "Date": "2022-12-01T00:00:00",
+      "ApprovedRequirements": 5,
+      "TotalRequirements": 25,
+      "Release": "2"
+    },
+    {
+      "Date": "2022-12-02T00:00:00",
+      "ApprovedRequirements": 0,
+      "TotalRequirements": 30,
+      "Release": "3"
+    },
+    {
+      "Date": "2022-12-03T00:00:00",
+      "ApprovedRequirements": 25,
+      "TotalRequirements": 0,
+      "Release": "3"
+    }
+]

@@ -1,0 +1,35 @@
+﻿{
+	"Name": "Projekt1_SchvaleneRequirements",
+	"ColumnNames": [
+		"Date",
+		"ApprovedRequirements",
+		"TotalRequirements",
+		"Release"
+	],
+	"ColumnTypes": [
+		"Datetime",
+		"Int64",
+		"Int64",
+		"String"
+	],
+	"Measures": [
+		"SumTotal",
+		"SumTotalByRelease",
+		"SumPriznak",
+		"SumPriznakByRelease",
+		"Ratio",
+		"RatioByRelease",
+		"LastRatio",
+		"LastRatioByRelease"
+	],
+	"MeasureDefinitions": [
+		"CALCULATE (SUM(table1[TotalRequirements]), FILTER( ALL( table1 ), table1[Date] \u003C= MAX (table1[Date] )))",
+		"CALCULATE (SUM (table1[TotalRequirements] ), FILTER(ALL ( table1 ), table1[Date] \u003C= MAX ( table1[Date] )), VALUES(table1[Release]))",
+		"CALCULATE ( SUM(table1[ApprovedRequirements] ), FILTER ( ALL ( table1 ), table1[Date] \u003C= MAX ( table1[Date] )))",
+		"CALCULATE ( SUM ( table1[ApprovedRequirements] ), FILTER ( ALL ( table1 ), table1[Date] \u003C= MAX ( table1[Date])), VALUES(table1[Release]))",
+		"table1[SumPriznak] / table1[SumTotal]",
+		"table1[SumPriznakByRelease] / table1[SumTotalByRelease]",
+		"CALCULATE([Ratio], table1[Date] == MAX(table1[Date]))",
+		"CALCULATE([RatioByRelease], table1[Date] == MAX(table1[Date]))"
+	]
+}
