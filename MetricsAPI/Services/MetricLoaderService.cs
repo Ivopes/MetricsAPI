@@ -11,9 +11,9 @@ namespace MetricsAPI.Services
 {
     public class MetricLoaderService : IMetricLoaderService
     {
-        private const string MetricsDefinitionFolder = @".\Metriky\Nove\{0}\Definition\metricDefinition";
-        private const string MetricsIncFolder = @".\Metriky\Nove\{0}\Increment\{1}";
-        private const string MetricsTotalFolder = @".\Metriky\Nove\{0}\Total\{1}";
+        private const string MetricsDefinitionFolder = @".\Metriky\{0}\Definition\metricDefinition";
+        private const string MetricsIncFolder = @".\Metriky\{0}\Increment\{1}";
+        private const string MetricsTotalFolder = @".\Metriky\{0}\Total\{1}";
 
         private readonly MetricsUpdateOptions _updateOptions;
         public MetricLoaderService(IOptions<MetricsUpdateOptions> opt)

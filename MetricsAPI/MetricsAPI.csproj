@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Metriky\Nove\Projekt1_SchvaleneReqJson\Definition\metricDefinition.json" />
-    <Content Remove="Metriky\Nove\Projekt1_SchvaleneReqJson\Increment\SchvaleneReqjson_00_11_03_2023.json" />
-    <Content Remove="Metriky\Nove\Projekt1_SchvaleneReqJson\Total\SchvaleneReqjson.json" />
+    <Content Remove="Metriky\Projekt1_SchvaleneReqJson\Definition\metricDefinition.json" />
+    <Content Remove="Metriky\Projekt1_SchvaleneReqJson\Increment\SchvaleneReqjson_00_11_03_2023.json" />
+    <Content Remove="Metriky\Projekt1_SchvaleneReqJson\Total\SchvaleneReqjson.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,59 +17,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Definition\metricDefinition.csv">
+    <None Update="Metriky\Projekt1_SchvaleneReq\Definition\metricDefinition.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Increment\SchvaleneReq_00_11_03_2023.csv">
+    <None Update="Metriky\Projekt1_SchvaleneReq\Increment\SchvaleneReq_00_11_03_2023.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metriky\Nove\Projekt1_SchvaleneReq\Total\SchvaleneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projektTest3\Total\SchvaleneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projektTest3\Total\SplneneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projektTest2\Total\SchvaleneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projektTest2\Total\SplneneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projektTest\Total\SchvaleneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projektTest\Total\SplneneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\Projekt1\Increment\ObecnyPomerRelease1.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\Projekt1\Increment\ObecnyPomerRelease2.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projekt1\Total\SplneneReq.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Metriky\projekt1\Total\SchvaleneReq.csv">
+    <None Update="Metriky\Projekt1_SchvaleneReq\Total\SchvaleneReq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Metriky\Projekt2\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Metriky\Nove\Projekt1_SchvaleneReqJson\Definition\metricDefinition.json">
+    <None Include="Metriky\Projekt1_SchvaleneReqJson\Definition\metricDefinition.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Metriky\Nove\Projekt1_SchvaleneReqJson\Increment\SchvaleneReqjson_00_11_03_2023.json">
+    <None Include="Metriky\Projekt1_SchvaleneReqJson\Increment\SchvaleneReqjson_00_11_03_2023.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Metriky\Nove\Projekt1_SchvaleneReqJson\Total\SchvaleneReqjson.json">
+    <None Include="Metriky\Projekt1_SchvaleneReqJson\Total\SchvaleneReqjson.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
