@@ -14,6 +14,8 @@ builder.Services.AddTransient<IMetricLoaderService, MetricLoaderService>();
 
 builder.Services.Configure<MetricsUpdateOptions>(builder.Configuration.GetSection(MetricsUpdateOptions.MetricsUpdate));
 
+builder.Services.AddHostedService<MockBackgroundMetricUpdater>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
