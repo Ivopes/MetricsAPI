@@ -38,6 +38,7 @@ namespace MetricsAPI.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (!_updateOptions.Enabled) { return; }
 
             //Pockat pro celou hodinu
             var diffToZeroMinutes = (60 - DateTime.UtcNow.Minute) % 60;
@@ -101,46 +102,13 @@ namespace MetricsAPI.Services
                 {
                     UpdateFrequency.Hour => DateTime.UtcNow.ToString("dd.MM.yyyy") + ";",
                     UpdateFrequency.Day => DateTime.UtcNow.AddDays(-1).ToString("dd.MM.yyyy") + ";",
-                    UpdateFrequency.Week => DateTime.UtcNow.AddDays(-(max-i)).ToString("dd.MM.yyyy") + ";",
+                    UpdateFrequency.Week => DateTime.UtcNow.AddDays(-(max - i)).ToString("dd.MM.yyyy") + ";",
                 };
-                toAdd += rand.Next(3,11) + ";";
+                toAdd += rand.Next(3, 11) + ";";
                 toAdd += rand.Next(10, 15) + ";";
-                toAdd += (i%3 + 1).ToString() + Environment.NewLine;
+                toAdd += (i % 3 + 1).ToString() + Environment.NewLine;
             }
-            /*
-            switch (_updateOptions.UpdateFrequency)
-            {
-                case UpdateFrequency.Hour:
-                    for (int i = 0; i < 3; i++)
-                    {
-                        toAdd += DateTime.UtcNow.ToString() + ";";
-                        toAdd += rand.Next(11) + ";";
-                        toAdd += rand.Next(10, 20) + ";";
-                        toAdd += rand.Next(1, 4) + Environment.NewLine;
-                    }
-                    break;
-                case UpdateFrequency.Day:
-                    for (int i = 0; i < 3; i++)
-                    {
-                        toAdd += lastDate.AddDays(1).ToString() + ";";
-                        toAdd += rand.Next(11) + ";";
-                        toAdd += rand.Next(10, 20) + ";";
-                        toAdd += (i+1).ToString();
-                    }
-                    break;
-                case UpdateFrequency.Week:
-                    for (int i = 0; i < 3; i++)
-                    {
-                        toAdd += lastDate.AddDays(7).ToString() + ";";
-                        toAdd += rand.Next(11) + ";";
-                        toAdd += rand.Next(10, 20) + ";";
-                        toAdd += (i + 1).ToString();
-                    }
-                    break;
-                default:
-                    break;
-            }
-            */
+           
 
             var filePath = Directory.GetFiles(Path.Combine(path, "Increment"))[0];
             var metricString = await File.ReadAllTextAsync(filePath);
