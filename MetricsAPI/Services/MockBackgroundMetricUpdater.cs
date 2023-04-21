@@ -1,20 +1,13 @@
 ﻿using MetricsAPI.Interfaces;
 using MetricsAPI.Models;
 using Microsoft.Extensions.Options;
-using System.IO;
-using System.Runtime.CompilerServices;
 
 namespace MetricsAPI.Services
 {
     public class MockBackgroundMetricUpdater : BackgroundService
     {
-        private const string MetricsDefinitionFolder = @".\Metriky\{0}\Definition\metricDefinition";
-        private const string MetricsIncFolder = @".\Metriky\{0}\Increment\{1}";
-        private const string MetricsTotalFolder = @".\Metriky\{0}\Total\{1}";
-
         private readonly MetricsUpdateMockOptions _updateOptions = new();
         private readonly PeriodicTimer _timer = new(TimeSpan.FromHours(1));
-        private readonly bool _enabled = true;
         private readonly IServiceProvider _serviceProvider;
 
         public MockBackgroundMetricUpdater(IOptions<MetricsUpdateMockOptions> opt, IServiceProvider serviceProvider)
@@ -29,10 +22,7 @@ namespace MetricsAPI.Services
                     Enabled = opt.Value.Enabled
                 };
             }
-            else
-            {
-                _enabled = false;
-            }
+
             _serviceProvider = serviceProvider;
         }
 
@@ -58,7 +48,7 @@ namespace MetricsAPI.Services
         }
         private async Task UpdateMetrics()
         {
-            var metricFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Metriky");
+            var metricFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Metrics");
 
             var folders = Directory.GetDirectories(metricFolder);
 
@@ -108,22 +98,22 @@ namespace MetricsAPI.Services
                 toAdd += rand.Next(10, 15) + ";";
                 toAdd += (i % 3 + 1).ToString() + Environment.NewLine;
             }
-           
+
 
             var filePath = Directory.GetFiles(Path.Combine(path, "Increment"))[0];
             var metricString = await File.ReadAllTextAsync(filePath);
 
             fileName += "_" + GetNewUpdateSuffix() + ".csv";
-            fileName = fileName[(fileName.IndexOf("_") + 1)..]; 
+            fileName = fileName[(fileName.IndexOf("_") + 1)..];
 
             await File.WriteAllTextAsync(Path.Combine(path, "Increment", fileName), toAdd);
 
             return metricString;
         }
-        private async Task  AddTotalFromIncrement(string path, string increment)
+        private async Task AddTotalFromIncrement(string path, string increment)
         {
             var filePath = Directory.GetFiles(Path.Combine(path, "Total"))[0];
-            
+
             await File.AppendAllTextAsync(filePath, increment);
         }
         private string GetNewUpdateSuffix()

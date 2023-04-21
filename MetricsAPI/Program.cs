@@ -1,7 +1,6 @@
 using MetricsAPI.Interfaces;
 using MetricsAPI.Models;
 using MetricsAPI.Services;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 

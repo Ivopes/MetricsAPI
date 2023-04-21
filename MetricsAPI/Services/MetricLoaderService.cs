@@ -1,19 +1,16 @@
 ﻿using MetricsAPI.Interfaces;
 using MetricsAPI.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.Metrics;
 using System.Dynamic;
-using System.IO;
 using System.Text.Json;
 
 namespace MetricsAPI.Services
 {
     public class MetricLoaderService : IMetricLoaderService
     {
-        private const string MetricsDefinitionFolder = @".\Metriky\{0}\Definition\metricDefinition";
-        private const string MetricsIncFolder = @".\Metriky\{0}\Increment\{1}";
-        private const string MetricsTotalFolder = @".\Metriky\{0}\Total\{1}";
+        private const string MetricsDefinitionFolder = @".\Metrics\{0}\Definition\metricDefinition";
+        private const string MetricsIncFolder = @".\Metrics\{0}\Increment\{1}";
+        private const string MetricsTotalFolder = @".\Metrics\{0}\Total\{1}";
 
         private readonly MetricsUpdateOptions _updateOptions;
         public MetricLoaderService(IOptions<MetricsUpdateOptions> opt)
@@ -59,7 +56,7 @@ namespace MetricsAPI.Services
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
-            
+
             using Stream s = File.OpenRead(filePath);
 
             using StreamReader sr = new StreamReader(s);
@@ -108,7 +105,7 @@ namespace MetricsAPI.Services
             string filePath = string.Format(exePath, metricName);
 
 
-            if (File.Exists(filePath + GetExt(FileExt.CSV))) 
+            if (File.Exists(filePath + GetExt(FileExt.CSV)))
             {
                 filePath += GetExt(FileExt.CSV);
                 return await ReadDefinitionFromCsv(filePath);
@@ -167,7 +164,6 @@ namespace MetricsAPI.Services
         private void CreateFilePath(string metricName, bool loadIncrement, string fileExtention, out string filePath, out string fileDefinition)
         {
             var nameStartIndex = metricName.IndexOf("_");
-            //if (nameStartIndex == -1) return string.Empty;
 
             string fileName = metricName.Substring(nameStartIndex + 1);
 

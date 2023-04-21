@@ -2,16 +2,16 @@
 {
     public class MetricsUpdateOptions
     {
-     
-            public const string MetricsUpdate = "MetricsUpdate";
-            public UpdateFrequency UpdateFrequency { get; set; }
-            public DayOfWeek DayOfWeek { get; set; }
-            private int _hour;
-            public int Hour
-            {
-                get => _hour;
-                set => _hour = Math.Clamp(value, 0, 23);
-            }
+
+        public const string MetricsUpdate = "MetricsUpdate";
+        public UpdateFrequency UpdateFrequency { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
+        private int _hour;
+        public int Hour
+        {
+            get => _hour;
+            set => _hour = Math.Clamp(value, 0, 23);
+        }
     }
     public enum UpdateFrequency
     {
