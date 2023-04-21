@@ -12,12 +12,12 @@ namespace MetricsAPI.Services
         private const string MetricsIncFolder = @".\Metriky\{0}\Increment\{1}";
         private const string MetricsTotalFolder = @".\Metriky\{0}\Total\{1}";
 
-        private readonly MetricsUpdateOptions _updateOptions = new();
+        private readonly MetricsUpdateMockOptions _updateOptions = new();
         private readonly PeriodicTimer _timer = new(TimeSpan.FromHours(1));
         private readonly bool _enabled = true;
         private readonly IServiceProvider _serviceProvider;
 
-        public MockBackgroundMetricUpdater(IOptions<MetricsUpdateOptions> opt, IServiceProvider serviceProvider)
+        public MockBackgroundMetricUpdater(IOptions<MetricsUpdateMockOptions> opt, IServiceProvider serviceProvider)
         {
             if (opt.Value is not null)
             {
@@ -26,6 +26,7 @@ namespace MetricsAPI.Services
                     DayOfWeek = opt.Value.DayOfWeek,
                     Hour = opt.Value.Hour,
                     UpdateFrequency = opt.Value.UpdateFrequency,
+                    Enabled = opt.Value.Enabled
                 };
             }
             else
@@ -37,7 +38,6 @@ namespace MetricsAPI.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await UpdateMetrics();
 
             //Pockat pro celou hodinu
             var diffToZeroMinutes = (60 - DateTime.UtcNow.Minute) % 60;
@@ -145,7 +145,7 @@ namespace MetricsAPI.Services
             var filePath = Directory.GetFiles(Path.Combine(path, "Increment"))[0];
             var metricString = await File.ReadAllTextAsync(filePath);
 
-            fileName += "_" + GetUpdateSuffix() + ".csv";
+            fileName += "_" + GetNewUpdateSuffix() + ".csv";
             fileName = fileName[(fileName.IndexOf("_") + 1)..]; 
 
             await File.WriteAllTextAsync(Path.Combine(path, "Increment", fileName), toAdd);
@@ -158,20 +158,20 @@ namespace MetricsAPI.Services
             
             await File.AppendAllTextAsync(filePath, increment);
         }
-        private string GetUpdateSuffix()
+        private string GetNewUpdateSuffix()
         {
             DateTime lastMetricDate = DateTime.UtcNow;
 
             switch (_updateOptions.UpdateFrequency)
             {
                 case UpdateFrequency.Hour:
-                    lastMetricDate = lastMetricDate.AddHours(-1);
+                    //lastMetricDate = lastMetricDate.AddHours(-1);
                     return lastMetricDate.ToString("HH_dd_MM_yyyy");
                 case UpdateFrequency.Day:
-                    lastMetricDate = lastMetricDate.AddDays(-1);
+                    //lastMetricDate = lastMetricDate.AddDays(-1);
                     return lastMetricDate.ToString("00_dd_MM_yyyy");
                 case UpdateFrequency.Week:
-                    while (lastMetricDate.DayOfWeek != _updateOptions.DayOfWeek) lastMetricDate = lastMetricDate.AddDays(-1);
+                    //while (lastMetricDate.DayOfWeek != _updateOptions.DayOfWeek) lastMetricDate = lastMetricDate.AddDays(-1);
                     return lastMetricDate.ToString("00_dd_MM_yyyy");
                 default:
                     return string.Empty;

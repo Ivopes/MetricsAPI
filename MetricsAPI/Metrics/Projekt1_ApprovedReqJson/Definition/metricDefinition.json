@@ -1,5 +1,5 @@
 ﻿{
-	"Name": "Projekt1_SchvaleneRequirements",
+	"Name": "Projekt1_ApprovedRequirements",
 	"ColumnNames": [
 		"Date",
 		"ApprovedRequirements",
@@ -15,8 +15,8 @@
 	"Measures": [
 		"SumTotal",
 		"SumTotalByRelease",
-		"SumPriznak",
-		"SumPriznakByRelease",
+		"SumSign",
+		"SumSignByRelease",
 		"Ratio",
 		"RatioByRelease",
 		"LastRatio",
@@ -27,8 +27,8 @@
 		"CALCULATE (SUM (table1[TotalRequirements] ), FILTER(ALL ( table1 ), table1[Date] \u003C= MAX ( table1[Date] )), VALUES(table1[Release]))",
 		"CALCULATE ( SUM(table1[ApprovedRequirements] ), FILTER ( ALL ( table1 ), table1[Date] \u003C= MAX ( table1[Date] )))",
 		"CALCULATE ( SUM ( table1[ApprovedRequirements] ), FILTER ( ALL ( table1 ), table1[Date] \u003C= MAX ( table1[Date])), VALUES(table1[Release]))",
-		"table1[SumPriznak] / table1[SumTotal]",
-		"table1[SumPriznakByRelease] / table1[SumTotalByRelease]",
+		"table1[SumSign] / table1[SumTotal]",
+		"table1[SumSignByRelease] / table1[SumTotalByRelease]",
 		"CALCULATE([Ratio], table1[Date] == MAX(table1[Date]))",
 		"CALCULATE([RatioByRelease], table1[Date] == MAX(table1[Date]))"
 	]
