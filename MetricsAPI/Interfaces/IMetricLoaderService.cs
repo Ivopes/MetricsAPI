@@ -6,6 +6,6 @@ namespace MetricsAPI.Interfaces
     public interface IMetricLoaderService
     {
         Task<MetricData<ExpandoObject>?> LoadMetricData(string metricName, bool loadIncrement);
-        Task<IResult> LoadMetricDefinition(string metricName);
+        Task<MetricDefinition> LoadMetricDefinition(string metricName);
     }
 }

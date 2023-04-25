@@ -46,9 +46,9 @@ namespace MetricsAPI.Services
             {
                 if (folder.EndsWith("Projekt1_FinishedReq") || folder.EndsWith("Projekt1_ApprovedReq"))
                 {
-                    //var oldInc = await AddRandomIncrementCSV(folder);
+                    var oldInc = await AddRandomIncrementCSV(folder);
 
-                    //await AddTotalFromIncrement(folder, oldInc);
+                    await AddTotalFromIncrement(folder, oldInc);
                 }
             }
         }

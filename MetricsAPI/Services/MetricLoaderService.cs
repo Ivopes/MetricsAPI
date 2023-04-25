@@ -17,24 +17,9 @@ namespace MetricsAPI.Services
         {
             _updateOptions = opt.Value;
         }
-        public async Task<IResult> LoadMetricDefinition(string metricName)
+        public async Task<MetricDefinition> LoadMetricDefinition(string metricName)
         {
-            var definition = new MetricDefinition();
-
-            try
-            {
-                definition = await ReadDefinitionFromFile(metricName);
-
-                return Results.Ok(definition);
-            }
-            catch (FileNotFoundException)
-            {
-                return Results.NotFound();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return Results.NotFound();
-            }
+            return await ReadDefinitionFromFile(metricName);
         }
         public async Task<MetricData<ExpandoObject>?> LoadMetricData(string metricName, bool loadIncrement)
         {
@@ -42,11 +27,12 @@ namespace MetricsAPI.Services
 
             CreateFilePath(metricName, loadIncrement, GetExt(FileExt.CSV), out var filePath, out _);
 
+            // Read CSV
             if (File.Exists(filePath))
             {
                 return await ReadMetricFromFileCsv(filePath, definition);
             }
-            else
+            else // Read JSON
             {
                 CreateFilePath(metricName, loadIncrement, GetExt(FileExt.JSON), out filePath, out _);
                 return await ReadMetricFromFileJson(filePath, definition);
