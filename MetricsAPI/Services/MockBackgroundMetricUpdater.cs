@@ -1,37 +1,27 @@
 ﻿using MetricsAPI.Interfaces;
 using MetricsAPI.Models;
 using Microsoft.Extensions.Options;
+using System.IO;
 
 namespace MetricsAPI.Services
 {
     public class MockBackgroundMetricUpdater : BackgroundService
     {
-        private readonly MetricsUpdateMockOptions _updateOptions = new();
+        private readonly MetricsUpdateOptions _updateOptions;
         private readonly PeriodicTimer _timer = new(TimeSpan.FromHours(1));
         private readonly IServiceProvider _serviceProvider;
-
-        public MockBackgroundMetricUpdater(IOptions<MetricsUpdateMockOptions> opt, IServiceProvider serviceProvider)
+        public MockBackgroundMetricUpdater(IOptions<MetricsUpdateOptions> opt, IServiceProvider serviceProvider)
         {
-            if (opt.Value is not null)
-            {
-                _updateOptions = new()
-                {
-                    DayOfWeek = opt.Value.DayOfWeek,
-                    Hour = opt.Value.Hour,
-                    UpdateFrequency = opt.Value.UpdateFrequency,
-                    Enabled = opt.Value.Enabled
-                };
-            }
-
+            _updateOptions = opt.Value;
             _serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (!_updateOptions.Enabled) { return; }
+            if (!_updateOptions.MockUpdate.Enabled) { return; }
 
             //Pockat pro celou hodinu
-            var diffToZeroMinutes = (60 - DateTime.UtcNow.Minute) % 60;
+            var diffToZeroMinutes = (_updateOptions.MockUpdate.Minute - DateTime.UtcNow.Minute + 60) % 60;
             await Task.Delay(TimeSpan.FromMinutes(diffToZeroMinutes), stoppingToken);
 
             if (ShouldUpdate())
@@ -54,15 +44,11 @@ namespace MetricsAPI.Services
 
             foreach (var folder in folders)
             {
-                var def = Directory.GetFiles(Path.Combine(folder, "Definition"))[0];
-
-                var ext = Path.GetExtension(def);
-
-                if (ext == ".csv")
+                if (folder.EndsWith("Projekt1_FinishedReq") || folder.EndsWith("Projekt1_ApprovedReq"))
                 {
-                    var oldInc = await AddRandomIncrementCSV(folder);
+                    //var oldInc = await AddRandomIncrementCSV(folder);
 
-                    await AddTotalFromIncrement(folder, oldInc);
+                    //await AddTotalFromIncrement(folder, oldInc);
                 }
             }
         }
