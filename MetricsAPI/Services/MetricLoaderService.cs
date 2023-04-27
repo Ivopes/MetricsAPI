@@ -42,7 +42,7 @@ namespace MetricsAPI.Services
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
-            metrics.Name = Path.GetFileNameWithoutExtension(filePath);
+            metrics.Name = Path.GetFileNameWithoutExtension(filePath).ToLower();
             
             using Stream s = File.OpenRead(filePath);
 
@@ -78,7 +78,7 @@ namespace MetricsAPI.Services
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
-            metrics.Name = Path.GetFileNameWithoutExtension(filePath);
+            metrics.Name = Path.GetFileNameWithoutExtension(filePath).ToLower();
 
             using Stream s = File.OpenRead(filePath);
 
