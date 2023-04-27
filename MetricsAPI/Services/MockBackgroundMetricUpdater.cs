@@ -10,15 +10,18 @@ namespace MetricsAPI.Services
         private readonly MetricsUpdateOptions _updateOptions;
         private readonly PeriodicTimer _timer = new(TimeSpan.FromHours(1));
         private readonly IServiceProvider _serviceProvider;
-        public MockBackgroundMetricUpdater(IOptions<MetricsUpdateOptions> opt, IServiceProvider serviceProvider)
+        private readonly ILogger<MockBackgroundMetricUpdater> _logger;
+        public MockBackgroundMetricUpdater(IOptions<MetricsUpdateOptions> opt, IServiceProvider serviceProvider, ILogger<MockBackgroundMetricUpdater> logger)
         {
             _updateOptions = opt.Value;
             _serviceProvider = serviceProvider;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (!_updateOptions.MockUpdate.Enabled) { return; }
+            _logger.LogInformation($"Starting executing {nameof(MockBackgroundMetricUpdater)}...");
 
             //Pockat pro celou hodinu
             var diffToZeroMinutes = (_updateOptions.MockUpdate.Minute - DateTime.UtcNow.Minute + 60) % 60;
@@ -38,6 +41,9 @@ namespace MetricsAPI.Services
         }
         private async Task UpdateMetrics()
         {
+            _logger.LogInformation($"Starting {nameof(MockBackgroundMetricUpdater)} update...");
+
+
             var metricFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Metrics");
 
             var folders = Directory.GetDirectories(metricFolder);
@@ -57,17 +63,8 @@ namespace MetricsAPI.Services
         /// </summary>
         private async Task<string> AddRandomIncrementCSV(string path)
         {
-
             string toAdd = string.Empty;
-            string fileName = new DirectoryInfo(path).Name;
-            await using var scope = _serviceProvider.CreateAsyncScope();
-
-            var metricLoader = scope.ServiceProvider.GetRequiredService<IMetricLoaderService>();
-
-            var metric = await metricLoader.LoadMetricData(fileName, true);
-
-            DateTime lastDate = DateTime.Parse((metric!.Rows.Last() as IDictionary<string, object>)["Date"].ToString()!);
-
+            
             var rand = new Random();
             int max = 3;
             if (_updateOptions.UpdateFrequency == UpdateFrequency.Week) max = 7;
@@ -85,12 +82,14 @@ namespace MetricsAPI.Services
                 toAdd += (i % 3 + 1).ToString() + Environment.NewLine;
             }
 
-
-            var filePath = Directory.GetFiles(Path.Combine(path, "Increment"))[0];
+            string fileName = new DirectoryInfo(path).Name;
+            string filePath = Directory.GetFiles(Path.Combine(path, "Increment"))[0];
             var metricString = await File.ReadAllTextAsync(filePath);
 
             fileName += "_" + GetNewUpdateSuffix() + ".csv";
             fileName = fileName[(fileName.IndexOf("_") + 1)..];
+
+            File.Delete(filePath);
 
             await File.WriteAllTextAsync(Path.Combine(path, "Increment", fileName), toAdd);
 
@@ -109,13 +108,13 @@ namespace MetricsAPI.Services
             switch (_updateOptions.UpdateFrequency)
             {
                 case UpdateFrequency.Hour:
-                    //lastMetricDate = lastMetricDate.AddHours(-1);
+                    lastMetricDate = lastMetricDate.AddHours(-1);
                     return lastMetricDate.ToString("HH_dd_MM_yyyy");
                 case UpdateFrequency.Day:
-                    //lastMetricDate = lastMetricDate.AddDays(-1);
+                    lastMetricDate = lastMetricDate.AddDays(-1);
                     return lastMetricDate.ToString("00_dd_MM_yyyy");
                 case UpdateFrequency.Week:
-                    //while (lastMetricDate.DayOfWeek != _updateOptions.DayOfWeek) lastMetricDate = lastMetricDate.AddDays(-1);
+                    while (lastMetricDate.DayOfWeek != _updateOptions.DayOfWeek) lastMetricDate = lastMetricDate.AddDays(-1);
                     return lastMetricDate.ToString("00_dd_MM_yyyy");
                 default:
                     return string.Empty;

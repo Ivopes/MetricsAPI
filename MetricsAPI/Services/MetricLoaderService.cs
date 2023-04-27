@@ -152,19 +152,20 @@ namespace MetricsAPI.Services
             var nameStartIndex = metricName.IndexOf("_");
 
             string fileName = metricName.Substring(nameStartIndex + 1);
-
+            string exePath;
             if (loadIncrement)
             {
                 string date = GetUpdateSuffix();
 
-                var exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsIncFolder);
+                exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsIncFolder);
                 filePath = string.Format(exePath, metricName, fileName + "_" + date + fileExtention);
             }
             else
             {
-                filePath = string.Format(MetricsTotalFolder, metricName, fileName + fileExtention);
+                exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsTotalFolder);
+                filePath = string.Format(exePath, metricName, fileName + fileExtention);
             }
-
+            exePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, MetricsDefinitionFolder);
             fileDefinition = string.Format(MetricsDefinitionFolder, metricName);
         }
         private string GetUpdateSuffix()
@@ -195,6 +196,8 @@ namespace MetricsAPI.Services
                 _ => string.Empty
             };
         }
+
+       
     }
     public enum FileExt
     {
