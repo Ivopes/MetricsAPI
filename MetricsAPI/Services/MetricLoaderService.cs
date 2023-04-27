@@ -32,10 +32,16 @@ namespace MetricsAPI.Services
             {
                 return await ReadMetricFromFileCsv(filePath, definition);
             }
-            else // Read JSON
+            else// Read JSON
             {
                 CreateFilePath(metricName, loadIncrement, GetExt(FileExt.JSON), out filePath, out _);
-                return await ReadMetricFromFileJson(filePath, definition);
+                if (File.Exists(filePath))
+                    return await ReadMetricFromFileJson(filePath, definition);
+                else
+                {
+                    throw new FileNotFoundException($"File increment {metricName} not found");
+                }
+
             }
         }
         private async Task<MetricData<ExpandoObject>> ReadMetricFromFileCsv(string filePath, MetricDefinition definition)

@@ -7,46 +7,39 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Metrics\Projekt1_ApprovedReqJson\Definition\metricDefinition.json" />
-    <Content Remove="Metrics\Projekt1_ApprovedReqJson\Increment\ApprovedReqjson_00_11_03_2023.json" />
-    <Content Remove="Metrics\Projekt1_ApprovedReqJson\Total\ApprovedReqjson.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Metrics\Projekt1_FinishedReq\Definition\metricDefinition.csv">
+    <None Update="Metrics\Projekt1_ApprovedReqJson\Definition\metricDefinition.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metrics\Projekt1_FinishedReq\Increment\FinishedReq_00_11_03_2023.csv">
+    <None Update="Metrics\Projekt1_ApprovedReqJson\Increment\ApprovedReqjson_10_25_04_2023.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metrics\Projekt1_FinishedReq\Total\FinishedReq.csv">
+    <None Update="Metrics\Projekt1_ApprovedReqJson\Total\ApprovedReqjson.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Metrics\Projekt1_ApprovedReq\Definition\metricDefinition.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metrics\Projekt1_ApprovedReq\Increment\ApprovedReq_00_18_03_2023.csv">
+	  <None Update="Metrics\Projekt1_ApprovedReq\Increment\ApprovedReq_10_25_04_2023.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Metrics\Projekt1_ApprovedReq\Total\ApprovedReq.csv">
+	  <None Update="Metrics\Projekt1_ApprovedReq\Total\ApprovedReq.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Update="Metrics\Projekt1_FinishedReq\Definition\metricDefinition.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Update="Metrics\Projekt1_FinishedReq\Increment\FinishedReq_10_25_04_2023.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Update="Metrics\Projekt1_FinishedReq\Total\FinishedReq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Metrics\Projekt1_ApprovedReqJson\Definition\metricDefinition.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Metrics\Projekt1_ApprovedReqJson\Increment\ApprovedReqjson_00_11_03_2023.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Metrics\Projekt1_ApprovedReqJson\Total\ApprovedReqjson.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+
 
 </Project>

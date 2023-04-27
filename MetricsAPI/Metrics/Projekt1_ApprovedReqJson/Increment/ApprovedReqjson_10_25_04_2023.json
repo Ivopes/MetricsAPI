@@ -1,0 +1,44 @@
+﻿[
+    {
+      "Date": "2023-04-18T00:00:00",
+      "ApprovedRequirements": 9,
+      "TotalRequirements": 13,
+      "Release": "1"
+    },
+    {
+      "Date": "2023-04-19T00:00:00",
+      "ApprovedRequirements": 6,
+      "TotalRequirements": 13,
+      "Release": "2"
+    },
+    {
+      "Date": "2023-04-20T00:00:00",
+      "ApprovedRequirements": 4,
+      "TotalRequirements": 11,
+      "Release": "3"
+    },
+    {
+      "Date": "2023-04-21T00:00:00",
+      "ApprovedRequirements": 3,
+      "TotalRequirements": 13,
+      "Release": "1"
+    },
+    {
+      "Date": "2023-04-22T00:00:00",
+      "ApprovedRequirements": 10,
+      "TotalRequirements": 12,
+      "Release": "2"
+    },
+    {
+      "Date": "2023-04-23T00:00:00",
+      "ApprovedRequirements": 4,
+      "TotalRequirements": 14,
+      "Release": "3"
+    },
+    {
+      "Date": "2023-04-24T00:00:00",
+      "ApprovedRequirements": 10,
+      "TotalRequirements": 11,
+      "Release": "1"
+    }
+  ]
