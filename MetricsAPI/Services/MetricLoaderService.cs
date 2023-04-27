@@ -8,9 +8,9 @@ namespace MetricsAPI.Services
 {
     public class MetricLoaderService : IMetricLoaderService
     {
-        private const string MetricsDefinitionFolder = @".\Metrics\{0}\Definition\metricDefinition";
-        private const string MetricsIncFolder = @".\Metrics\{0}\Increment\{1}";
-        private const string MetricsTotalFolder = @".\Metrics\{0}\Total\{1}";
+        private const string MetricsDefinitionFolder = @"Metrics/{0}/Definition/metricDefinition";
+        private const string MetricsIncFolder = @"Metrics/{0}/Increment/{1}";
+        private const string MetricsTotalFolder = @"Metrics/{0}/Total/{1}";
 
         private readonly MetricsUpdateOptions _updateOptions;
         public MetricLoaderService(IOptions<MetricsUpdateOptions> opt)
@@ -42,7 +42,8 @@ namespace MetricsAPI.Services
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
-
+            metrics.Name = Path.GetFileNameWithoutExtension(filePath);
+            
             using Stream s = File.OpenRead(filePath);
 
             using StreamReader sr = new StreamReader(s);
@@ -77,6 +78,7 @@ namespace MetricsAPI.Services
         {
             MetricData<ExpandoObject> metrics = new();
             metrics.Rows = new List<ExpandoObject>();
+            metrics.Name = Path.GetFileNameWithoutExtension(filePath);
 
             using Stream s = File.OpenRead(filePath);
 
