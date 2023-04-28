@@ -67,7 +67,7 @@ namespace MetricsAPI.Services
                     }
                     else if (definition.ColumnTypes[i] == "Datetime")
                     {
-                        obj.Add(definition.ColumnNames[i], DateTime.Parse(line[i]));
+                        obj.Add(definition.ColumnNames[i], DateTime.ParseExact(line[i], "dd.MM.yyyy", null));
                     }
                     else
                     {

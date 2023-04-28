@@ -49,6 +49,11 @@ app.MapGet("/metrics/definition/{metricName}", async (string metricName, IMetric
         logger.LogError(ex.Message);
         return Results.NotFound();
     }
+    catch (Exception ex)
+    {
+        logger.LogError(ex.Message);
+        return Results.Problem();
+    }
 });
 app.MapGet("/metrics/total/{metricName}", async (string metricName, IMetricLoaderService loader, ILogger<Program> logger) =>
 {
@@ -70,6 +75,11 @@ app.MapGet("/metrics/total/{metricName}", async (string metricName, IMetricLoade
         logger.LogError(ex.Message);
         return Results.NotFound();
     }
+    catch (Exception ex)
+    {
+        logger.LogError(ex.Message);
+        return Results.Problem();
+    }
 });
 app.MapGet("/metrics/inc/{metricName}", async (string metricName, IMetricLoaderService loader, ILogger<Program> logger) =>
 {
@@ -90,6 +100,11 @@ app.MapGet("/metrics/inc/{metricName}", async (string metricName, IMetricLoaderS
     {
         logger.LogError(ex.Message);
         return Results.NotFound();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex.Message);
+        return Results.Problem();
     }
 });
 app.Run();
